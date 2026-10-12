@@ -2,10 +2,15 @@ package com.springboot.helpdesk.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class SecurityConfig {
@@ -17,18 +22,31 @@ public class SecurityConfig {
         UserDetails customer1 = User.builder()
                 .username("customer1")
                 .password("{noop}customer1")
-                .roles("CUSTOMER")
+                .authorities("CUSTOMER")
                 .build();
         UserDetails executive1 = User.builder()
                 .username("executive1")
                 .password("{noop}executive1")
-                .roles("EXECUTIVE")
+                .authorities("EXECUTIVE")
                 .build();
         UserDetails manager1 = User.builder()
                 .username("manager1")
                 .password("{noop}manager1")
-                .roles("MANAGER")
+                .authorities("MANAGER")
                 .build();
         return new InMemoryUserDetailsManager(customer1, executive1,manager1);
+
     }
+    @Bean
+    public SecurityFilterChain defaultFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests((authorize) -> authorize
+                        .requestMatchers(HttpMethod.POST,"/api/customer/add").hasAuthority("CUSTOMER")
+                        .anyRequest().permitAll()
+                );
+        http.httpBasic(Customizer.withDefaults());
+        return http.build();
+    }
+
 }
