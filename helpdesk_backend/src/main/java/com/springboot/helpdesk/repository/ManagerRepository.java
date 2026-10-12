@@ -18,4 +18,11 @@ where e.jobTitle is not null
 group by e.jobTitle
 """)
     List<JobTitleExecutiveCountDto> getExecutiveStatWithJobTitleAndCount();
+
+    @Query("""
+select m from Manager m
+join m.user u
+where u.username=?1
+""")
+    Manager getByUsername(String managerUsername);
 }

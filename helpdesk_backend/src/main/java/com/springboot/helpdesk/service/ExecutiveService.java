@@ -15,6 +15,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,24 +27,27 @@ public class ExecutiveService {
     private final ExecutiveRepository executiveRepository;
     private final UserRepository userRepository;
     private final ManagerRepository managerRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final UserService userService;
 
-    public void add(@Valid ExecutiveDto executiveDto, Long managerId) {
+    public void add(@Valid ExecutiveDto executiveDto, String managerUsername) {
         // Step 0: fetch manager from manager db
-         Optional<Manager> optionalManager =  managerRepository.findById(managerId);
-         if(optionalManager.isEmpty())
-             throw new ResourceNotFoundException("Manager id is invalid");
-         Manager manager = optionalManager.get();
+         Manager manager =  managerRepository.getByUsername(managerUsername);
+
 
         // Step 1: Prepare User object and save it in DB
         /*
         Executive
             User user <-- User must go in DB first and then Executive next
         * */
-        User user = new User();
-        user.setUsername(executiveDto.username());
-        user.setPassword(executiveDto.password());
-        user.setRole(Role.EXECUTIVE);
-        user = userRepository.save(user); // <-- this is a full created user obj with id
+        User user = userService.getUserObj(  // <-- this is a full created user obj with id
+                executiveDto.username(),
+                executiveDto.password(),
+                Role.EXECUTIVE
+        );
+
+        // Step 1.5 Encode password
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         // Step 2: Map ExecutiveDto to Executive entity
         Executive executive = ExecutiveMapper.mapDtoToModel(executiveDto);

@@ -18,8 +18,8 @@ public class ManagerController {
     private final ManagerService managerService;
 
     @PostMapping("/api/manager/add")
-    public Manager addManager(@Valid @RequestBody ManagerDto managerDto){
-        return managerService.addManager(managerDto);
+    public void addManager(@Valid @RequestBody ManagerDto managerDto){
+        managerService.addManager(managerDto);
     }
     /*
     JobTitle            |   No of Executives

@@ -6,6 +6,7 @@ import com.springboot.helpdesk.dto.Response.TicketInfoDto;
 import com.springboot.helpdesk.dto.Response.TicketRespDto;
 import com.springboot.helpdesk.enums.Priority;
 import com.springboot.helpdesk.enums.Status;
+import com.springboot.helpdesk.exception.OwnershipException;
 import com.springboot.helpdesk.exception.ResourceNotFoundException;
 import com.springboot.helpdesk.mapper.TicketMapper;
 import com.springboot.helpdesk.model.Customer;
@@ -33,10 +34,9 @@ public class TicketService {
     private final CustomerRepository customerRepository;
     private final ExecutiveRepository executiveRepository;
 
-    public void addTicket(Long customerId, @Valid TicketDto ticketDto) {
+    public void addTicket(String customerUsername, @Valid TicketDto ticketDto) {
         //fetch customer from customer db
-        Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(()-> new ResourceNotFoundException("Customer Id Invalid"));
+        Customer customer = customerRepository.getByUsername(customerUsername);
 
         //map ticketdto to ticket
         Ticket ticket = TicketMapper.convertDtoToEntity(ticketDto);
@@ -49,12 +49,18 @@ public class TicketService {
         ticketRepository.save(ticket);
     }
 
-    public void assignExecutive(Long executiveId, Long ticketId) {
+    public void assignExecutive(Long executiveId, Long ticketId, String managerUsername) {
         //fetch executive from db
         Executive executive = executiveRepository.findById(executiveId)
                 .orElseThrow(()-> new ResourceNotFoundException("Executive Id Invalid"));
-        //fetch ticket from db
 
+
+        // Step 1.5 Does this executive belong to the team of logged-in manager?
+        if(! (executive.getManager().getUser().getUsername().equals(managerUsername))){
+            throw new OwnershipException("Operation not allowed! contact admin");
+        }
+
+        //fetch ticket from db
         Ticket ticket = ticketRepository.findById(ticketId)
                 .orElseThrow(()-> new ResourceNotFoundException("Ticket Id is invalid"));
         //attach executive to ticket

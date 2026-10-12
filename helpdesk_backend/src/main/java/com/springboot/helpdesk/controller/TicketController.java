@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -19,14 +20,15 @@ import java.util.List;
 public class TicketController {
     private final TicketService ticketService;
 
-    @PostMapping("/api/ticket/add/{customerId}")
-    public void AddTicket(@PathVariable Long customerId, @Valid @RequestBody TicketDto ticketDto){
-        ticketService.addTicket(customerId,ticketDto);
+    @PostMapping("/api/ticket/add")
+    public void AddTicket(Principal principal, @Valid @RequestBody TicketDto ticketDto){
+        ticketService.addTicket(principal.getName(),ticketDto);
     }
 
+    // Done by Manager - activate the check after security config
     @PutMapping("/api/ticket/assign/{executiveId}/{ticketId}")
-    public void AddExecutive(@PathVariable Long executiveId,@PathVariable Long ticketId){
-        ticketService.assignExecutive(executiveId,ticketId);
+    public void AddExecutive(@PathVariable Long executiveId,@PathVariable Long ticketId,Principal principal){
+        ticketService.assignExecutive(executiveId,ticketId,principal.getName());
 
     }
 

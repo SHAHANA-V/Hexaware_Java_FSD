@@ -12,6 +12,7 @@ public class ExecutiveMapper {
         executive.setName(executiveDto.name());
         executive.setEmail(executiveDto.email());
         executive.setContact(executiveDto.contact());
+        executive.setJobTitle(executiveDto.jobTitle());
         return executive;
     }
 }

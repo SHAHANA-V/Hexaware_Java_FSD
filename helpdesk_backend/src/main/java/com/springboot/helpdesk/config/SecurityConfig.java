@@ -56,6 +56,15 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers(HttpMethod.POST,"/api/customer/add").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/customer/{id}").hasAuthority("CUSTOMER")
+                        .requestMatchers(HttpMethod.POST,"/api/ticket/add").hasAuthority("CUSTOMER")
+                        .requestMatchers(HttpMethod.POST,"/api/admin/add").permitAll()
+                        // Admin can onboard manager
+                        .requestMatchers(HttpMethod.POST,"/api/manager/add").hasAuthority("ADMIN")
+                        // Executive can be onboarded by manager after they login
+                        .requestMatchers(HttpMethod.POST,"/api/executive/add").hasAuthority("MANAGER")
+                        // Manager assigning the ticket to executive
+                        .requestMatchers(HttpMethod.PUT,"/api/ticket/assign/{executiveId}/{ticketId}").hasAuthority("MANAGER")
+
                         .anyRequest().permitAll()
                 );
         http.httpBasic(Customizer.withDefaults());

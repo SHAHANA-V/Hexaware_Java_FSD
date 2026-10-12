@@ -37,6 +37,12 @@ public class User implements UserDetails {
     @CreationTimestamp
     private Instant timestamp;
 
+    public User(String username, String password, Role role) {
+        this.username = username;
+        this.password = password;
+        this.role = role;
+    }
+
     @PrePersist
     public void init(){
         isActive = true;

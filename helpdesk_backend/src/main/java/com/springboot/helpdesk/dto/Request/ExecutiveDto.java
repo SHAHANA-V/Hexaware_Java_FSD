@@ -1,5 +1,6 @@
 package com.springboot.helpdesk.dto.Request;
 
+import com.springboot.helpdesk.enums.JobTitle;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -22,11 +23,12 @@ public record ExecutiveDto(
 
         @NotBlank
         @NotNull
-        @Size(min = 3,max = 15)
         String username,
 
         @NotNull
         @NotBlank
-        String password
+        String password,
+        JobTitle jobTitle
+
 ) {
 }
