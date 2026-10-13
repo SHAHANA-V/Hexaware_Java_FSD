@@ -1,6 +1,7 @@
 package com.springboot.helpdesk.config;
 
 import com.springboot.helpdesk.service.MyUserDetailsService;
+import com.springboot.helpdesk.utility.JwtUtility;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,12 +18,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
      private final MyUserDetailsService myUserDetailsService;
-
+     private final JwtFilter jwtFilter;
 
     // I will define a bean of type UserDetailsService
     // You are telling Spring: I don't want to use your details service,
@@ -55,6 +57,8 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers(HttpMethod.POST,"/api/customer/add").permitAll()
+                        //login api
+                        .requestMatchers(HttpMethod.GET,"/api/auth/login").authenticated()
                         .requestMatchers(HttpMethod.GET,"/api/customer/{id}").hasAuthority("CUSTOMER")
                         .requestMatchers(HttpMethod.POST,"/api/ticket/add").hasAuthority("CUSTOMER")
                         .requestMatchers(HttpMethod.POST,"/api/admin/add").permitAll()
@@ -67,6 +71,9 @@ public class SecurityConfig {
 
                         .anyRequest().permitAll()
                 );
+
+        // Add jwt filter before Spring's Auth Filter
+        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         http.httpBasic(Customizer.withDefaults());
         return http.build();
     }
