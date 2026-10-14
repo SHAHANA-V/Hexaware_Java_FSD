@@ -5,6 +5,7 @@ import com.springboot.FastX_backend.enums.BusType;
 import jakarta.persistence.*;
 import lombok.*;
 
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

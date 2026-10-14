@@ -5,6 +5,7 @@ import com.springboot.FastX_backend.enums.IdType;
 import jakarta.persistence.*;
 import lombok.*;
 
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

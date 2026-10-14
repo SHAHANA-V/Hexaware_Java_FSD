@@ -2,6 +2,7 @@ package com.springboot.FastX_backend.model;
 
 import com.springboot.FastX_backend.enums.CancellationStatus;
 import jakarta.persistence.*;
+
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 

@@ -3,6 +3,7 @@ import com.springboot.FastX_backend.enums.ScheduleStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
+
 import java.time.LocalTime;
 import java.util.Date;
 

@@ -1,6 +1,7 @@
 package com.springboot.FastX_backend.service;
 
 import com.springboot.FastX_backend.repository.UserRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

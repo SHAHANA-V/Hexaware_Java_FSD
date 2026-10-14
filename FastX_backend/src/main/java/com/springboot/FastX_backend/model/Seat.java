@@ -4,6 +4,7 @@ import com.springboot.FastX_backend.enums.SeatType;
 import jakarta.persistence.*;
 import lombok.*;
 
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

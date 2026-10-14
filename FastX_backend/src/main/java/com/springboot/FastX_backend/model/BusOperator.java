@@ -3,6 +3,7 @@ package com.springboot.FastX_backend.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
