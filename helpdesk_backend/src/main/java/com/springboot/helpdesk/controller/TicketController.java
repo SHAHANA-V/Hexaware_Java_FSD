@@ -16,9 +16,13 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequiredArgsConstructor
+
 public class TicketController {
     private final TicketService ticketService;
+
+    public TicketController(TicketService ticketService) {
+        this.ticketService = ticketService;
+    }
 
     @PostMapping("/api/ticket/add")
     public void AddTicket(Principal principal, @Valid @RequestBody TicketDto ticketDto){
