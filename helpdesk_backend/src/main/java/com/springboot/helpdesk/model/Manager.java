@@ -3,6 +3,7 @@ package com.springboot.helpdesk.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

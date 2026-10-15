@@ -4,6 +4,7 @@ import com.springboot.helpdesk.enums.PlanType;
 import jakarta.persistence.*;
 import lombok.*;
 
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

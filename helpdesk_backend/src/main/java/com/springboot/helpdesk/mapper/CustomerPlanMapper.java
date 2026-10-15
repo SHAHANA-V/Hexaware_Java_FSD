@@ -2,7 +2,9 @@ package com.springboot.helpdesk.mapper;
 
 import com.springboot.helpdesk.dto.Request.CustomerPlanDto;
 import com.springboot.helpdesk.model.CustomerPlan;
+import org.springframework.stereotype.Component;
 
+@Component
 public class CustomerPlanMapper {
     public static CustomerPlan convertDtoToEntity(CustomerPlanDto customerPlanDto){
         CustomerPlan customerPlan = new CustomerPlan();

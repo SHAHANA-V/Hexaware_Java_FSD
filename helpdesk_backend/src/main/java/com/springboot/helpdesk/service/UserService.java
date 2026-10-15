@@ -31,6 +31,5 @@ public class UserService {
 
         //save in user db
         userRepository.save(user);
-
     }
 }

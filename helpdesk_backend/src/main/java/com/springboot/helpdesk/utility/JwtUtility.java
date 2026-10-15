@@ -3,6 +3,7 @@ package com.springboot.helpdesk.utility;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Base64;
@@ -16,7 +17,8 @@ public class JwtUtility {
 
     // we can encode the username with tools but not the password without this secret key ,
     // so this key is very imp and secured by devops engineer in vault
-    private String SECRET_KEY = "hhjdsyuwtyskfhsdfjhsjfhsdjfh";
+    @Value("${jwt.secret}")
+    private String secretKey ;
 
     // Method to generate a JWT token for the given username
     public String generateToken(String username) { //We use this
@@ -31,7 +33,7 @@ public class JwtUtility {
                 .setSubject(username)//for which username this token is for
                 .setIssuedAt(new Date(System.currentTimeMillis()))//token generated time
                 .setExpiration(new Date(System.currentTimeMillis() + 1 * 24 * 60 * 60 * 1000))// this is the time limit in which the token would expire
-                .signWith(SignatureAlgorithm.HS256, Base64.getEncoder().encodeToString(SECRET_KEY.getBytes()))// assign algo, 256/4 which is we get 64 alphanumeric token generated
+                .signWith(SignatureAlgorithm.HS256, Base64.getEncoder().encodeToString(secretKey.getBytes()))// assign algo, 256/4 which is we get 64 alphanumeric token generated
                 .compact();
     }
 
@@ -60,7 +62,7 @@ public class JwtUtility {
     private Claims extractAllClaims(String token) {
         return Jwts
                 .parser()
-                .setSigningKey(Base64.getEncoder().encodeToString(SECRET_KEY.getBytes()))
+                .setSigningKey(Base64.getEncoder().encodeToString(secretKey.getBytes()))
                 .parseClaimsJws(token)
                 .getBody();
     }

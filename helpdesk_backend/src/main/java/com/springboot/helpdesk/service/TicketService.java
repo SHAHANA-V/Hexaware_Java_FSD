@@ -16,7 +16,9 @@ import com.springboot.helpdesk.repository.CustomerRepository;
 import com.springboot.helpdesk.repository.ExecutiveRepository;
 import com.springboot.helpdesk.repository.TicketRepository;
 import jakarta.validation.Valid;
+
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +30,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class TicketService {
 
     private final TicketRepository ticketRepository;
@@ -40,7 +43,7 @@ public class TicketService {
 
         //map ticketdto to ticket
         Ticket ticket = TicketMapper.convertDtoToEntity(ticketDto);
-
+        log.info("Mapping..");
         //attach customer to ticket
         ticket.setCustomer(customer);
         ticket.setStatus(Status.OPEN);

@@ -4,6 +4,7 @@ import com.springboot.helpdesk.enums.JobTitle;
 import jakarta.persistence.*;
 import lombok.*;
 
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

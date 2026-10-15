@@ -1,6 +1,7 @@
 package com.springboot.helpdesk.model;
 
 import jakarta.persistence.*;
+
 import lombok.*;
 import org.hibernate.annotations.UpdateTimestamp;
 

@@ -3,6 +3,8 @@ package com.springboot.helpdesk.config;
 import com.springboot.helpdesk.dto.Response.ErrorDto;
 import com.springboot.helpdesk.exception.InvalidCallException;
 import com.springboot.helpdesk.exception.ResourceNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
@@ -18,10 +20,15 @@ import java.util.Map;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+    //adding logger manually without lombok
+    Logger log = LoggerFactory.getLogger("GlobalExceptionHandler.class");
+
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorDto> handleResourceNotFoundException(
             ResourceNotFoundException e
             ){
+        log.warn("Id is not found in db");
         return ResponseEntity.badRequest().body(new ErrorDto(e.getMessage(),"Id is not available in db", Instant.now()));
     }
 
@@ -36,7 +43,12 @@ public class GlobalExceptionHandler {
         //get every field error
         List<FieldError> list = bindingResult.getFieldErrors();
         //put them in map and get the field and its default error message
-        list.forEach(fieldError->map.put(fieldError.getField(),fieldError.getDefaultMessage()));
+        //list.forEach(fieldError->map.put(fieldError.getField(),fieldError.getDefaultMessage()));
+
+        list.forEach(fieldError -> {
+            map.put(fieldError.getField(), fieldError.getDefaultMessage());
+            log.warn("Field {}, failed validation:{}",fieldError.getField(),fieldError.getDefaultMessage());
+        });
         return ResponseEntity.badRequest().body(map);
     }
     @ExceptionHandler(InvalidCallException.class)
